@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class CharacterViewModel(
-    private val repository: MarvelRepository,
-    private val service: MarvelService
+    private val repository: MarvelRepository
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<DetailViewState> = MutableLiveData()
