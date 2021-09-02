@@ -4,22 +4,6 @@ plugins {
     id 'kotlin-kapt'
 }
 
-//TODO ("Colocar em uma classe")
-def getProperty(String filename, String propName) {
-    def propsFile = rootProject.file(filename)
-    if (propsFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        if (props[propName] != null) {
-            return props[propName]
-        } else {
-            print("No such property " + propName + " in file " + filename)
-        }
-    } else {
-        print(filename + " does not exist!")
-    }
-}
-
 android {
     compileSdk 31
 
@@ -29,8 +13,6 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-
-        buildConfigField "String", "BASE_URL", "\"${getProperty("local.properties", "base_url")}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
