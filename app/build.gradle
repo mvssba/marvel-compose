@@ -1,0 +1,117 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+//TODO ("Colocar em uma classe")
+def getProperty(String filename, String propName) {
+    def propsFile = rootProject.file(filename)
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        } else {
+            print("No such property " + propName + " in file " + filename)
+        }
+    } else {
+        print(filename + " does not exist!")
+    }
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        applicationId "br.com.marcos2silva.marvel_compose"
+        minSdk 21
+        targetSdk 31
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "String", "BASE_URL", "\"${getProperty("local.properties", "base_url")}\""
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerVersion kotlin_version
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+    implementation project(path: ':network')
+
+    def retrofit = "2.6.2"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+
+
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.3.0'
+
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.0-alpha06'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
+
+    // Paging Compose
+    implementation "androidx.paging:paging-compose:1.0.0-alpha12"
+
+
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    implementation "io.coil-kt:coil-compose:1.3.2"
+
+    implementation "androidx.constraintlayout:constraintlayout-compose:$compose_constraint_layout_version"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_lifecycle_viewmodel_version"
+
+    // ViewModel and LiveData
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+
+    //koin
+    implementation "org.koin:koin-core:2.1.5"
+    implementation "org.koin:koin-android:2.1.5"
+    implementation "org.koin:koin-androidx-viewmodel:2.1.5"
+    implementation "org.koin:koin-androidx-scope:2.1.5"
+}
