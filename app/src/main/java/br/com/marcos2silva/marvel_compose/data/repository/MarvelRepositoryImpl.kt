@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import br.com.marcos2silva.marvel_compose.data.api.MarvelService
 import br.com.marcos2silva.marvel_compose.data.datasource.remote.CharactersPagingSource
-import br.com.marcos2silva.marvel_compose.data.datasource.remote.MarvelRemoteDataSource
 import br.com.marcos2silva.marvel_compose.model.Character
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.flowOn
 
 class MarvelRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val dataSource: MarvelRemoteDataSource,
     private val service: MarvelService
 ) : MarvelRepository {
 
@@ -24,18 +22,5 @@ class MarvelRepositoryImpl(
             pagingSourceFactory = { CharactersPagingSource(service, name) }
         ).flow
             .flowOn(ioDispatcher)
-    }
-
-    override suspend fun character(id: Int): Character? {
-        return dataSource.character(id)
-            .data.results
-            .map {
-                Character(
-                    id = it.id,
-                    name = it.name,
-                    description = it.description,
-                    thumbnail = "${it.thumbnail.path}.${it.thumbnail.extension}"
-                )
-            }.firstOrNull()
     }
 }
